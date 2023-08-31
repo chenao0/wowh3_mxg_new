@@ -43,8 +43,6 @@
         :style="{ height: '70%' }"
       >
         <div class="hint" v-if="order.data.selectedMethod === 'OFFLINE'">
-          
-
           <div v-if="xuanzhongShow" class="content12">
             <div @click="xuanze2()" style="
   display: flex;
@@ -162,7 +160,25 @@ export default {
     },
     clickHintShow() {
       if (this.order.data.methodGuideVos) {
-        console.log('');
+        const steps = this.order.data.methodGuideVos[0].content.split('\n').map((line) => {
+            const [title, content] = line.split('. ');
+            const id = Number(title.match(/\d+/)[0]);
+            const formattedTitle = `${id}.`;
+            return { title: formattedTitle, text: content };
+          });
+          this.textData = steps
+          this.boldInstructions = steps.map((instruction) => {
+            const regex = /\((.*?)\)/g;
+            const matchedText = instruction.text.match(regex);
+            if (matchedText && matchedText.length > 0) {
+              const firstMatch = matchedText[0];
+              const boldText = `<strong> ${firstMatch}</strong>`;
+              const modifiedText = instruction.text.replace(firstMatch, boldText);
+              return modifiedText;
+            }
+
+            return instruction.text;
+          });
       } else {
         this.init()
       }
@@ -193,38 +209,6 @@ export default {
         uuid = this.$route.query.uuid
       }
       getCheckout(uuid).then(res => {
-        this.order.data = res.data
-        if (this.order.data.selectedMethod === 'OFFLINE') {
-          this.xuanzhongWay = {
-            logoUrl: res.data.methodGuideVos[0].logoUrl,
-            content: res.data.methodGuideVos[0].content,
-            subject:  res.data.methodGuideVos[0].subject
-          }
-        }
-        console.log(this.xuanzhongWay);
-        const steps = res.data.methodGuideVos[0].content.split('\n').map((line) => {
-          const [title, content] = line.split('. ');
-          const id = Number(title.match(/\d+/)[0]);
-          const formattedTitle = `${id}.`;
-          return { title: formattedTitle, text: content };
-        });
-        this.textData = steps
-        this.boldInstructions = steps.map((instruction) => {
-          const regex = /\((.*?)\)/g;
-          const matchedText = instruction.text.match(regex);
-          if (matchedText && matchedText.length > 0) {
-            const firstMatch = matchedText[0];
-            const boldText = `<strong> ${firstMatch}</strong>`;
-            const modifiedText = instruction.text.replace(firstMatch, boldText);
-            return modifiedText;
-          }
-
-          return instruction.text;
-        });
-        this.showLoading = false
-        this.progressValue = 100;
-        clearInterval(timer);
-
         if (res.data.step == 'SUCCESS') {
           this.$router.push({
           name: 'success',
@@ -243,6 +227,37 @@ export default {
             }
           })
         }
+        this.order.data = res.data
+        if (this.order.data.selectedMethod === 'OFFLINE') {
+          this.xuanzhongWay = {
+            logoUrl: res.data.methodGuideVos[0].logoUrl,
+            content: res.data.methodGuideVos[0].content,
+            subject:  res.data.methodGuideVos[0].subject
+          }
+        } else {
+          const steps = res.data.methodGuideVos[0].content.split('\n').map((line) => {
+            const [title, content] = line.split('. ');
+            const id = Number(title.match(/\d+/)[0]);
+            const formattedTitle = `${id}.`;
+            return { title: formattedTitle, text: content };
+          });
+          this.textData = steps
+          this.boldInstructions = steps.map((instruction) => {
+            const regex = /\((.*?)\)/g;
+            const matchedText = instruction.text.match(regex);
+            if (matchedText && matchedText.length > 0) {
+              const firstMatch = matchedText[0];
+              const boldText = `<strong> ${firstMatch}</strong>`;
+              const modifiedText = instruction.text.replace(firstMatch, boldText);
+              return modifiedText;
+            }
+
+            return instruction.text;
+          });
+        }
+        this.showLoading = false
+        this.progressValue = 100;
+        clearInterval(timer);
       }).catch(error =>{
         this.showLoading = false
         this.progressValue = 100;
