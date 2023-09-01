@@ -19,7 +19,7 @@
     </div>
     <div class="c2" @click="hintShow = true,clickHintShow()">
       <img src="../assets/right.png" alt="">
-      View payment instruc
+      How to pay ?
     </div>
     <div class="c3">
       <img src="../assets/await.png" alt="">
