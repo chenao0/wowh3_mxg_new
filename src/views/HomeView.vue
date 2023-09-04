@@ -94,6 +94,7 @@ export default {
       getCheckout(uuid).then(res => {
         this.initData = res.data
         this.showLoading = false
+        localStorage.setItem('merchantName', res.data.merchantName);
         this.progressValue = 100;
         clearInterval(timer);
         if (this.initData.step == 'SUCCESS') {
@@ -132,13 +133,20 @@ export default {
             }
           })
         }
-        for (let index = 0; index < this.initData.supportMethods.length; index++) {
-          if (this.initData.supportMethods[index].method === 'OFFLINE') {
-            this.OFFLINEShow = true
-            this.selectMethodData.selectedMethod = 'OFFLINE'
-          } else if (this.initData.supportMethods[index].method === 'SPEI') {
-            this.SPEIBankShow = true
-            this.selectMethodData.selectedMethod = 'SPEI'
+        if (this.initData.supportMethods.length === 2) {
+          this.SPEIBankShow = true
+          this.OFFLINEShow = true
+          this.selectMethodData.selectedMethod = 'SPEI'
+        } else {
+          console.log(this.initData.supportMethods.length);
+          for (let index = 0; index < this.initData.supportMethods.length; index++) {
+            if (this.initData.supportMethods[index].method === 'OFFLINE') {
+              this.OFFLINEShow = true
+              this.selectMethodData.selectedMethod = 'OFFLINE'
+            } else if (this.initData.supportMethods[index].method === 'SPEI') {
+              this.SPEIBankShow = true
+              this.selectMethodData.selectedMethod = 'SPEI'
+            }
           }
         }
       }).catch(error =>{
@@ -225,7 +233,7 @@ export default {
   position: absolute;
   z-index: 2;
   top: 57%;
-  left: 53%;
+  left: 54%;
   color: #28B27C;
   line-height: 20px;
   font-weight: 900;

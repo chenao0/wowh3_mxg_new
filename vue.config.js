@@ -4,7 +4,7 @@ module.exports = {
   devServer:{
     proxy: {
       '/dev-api': {
-        target: 'https://payment-dev.wowpaymx.com',
+        target: 'https://xdckidpmsx-payment.wowpaymx.com',
         logLevel: 'debug',
         ws: true,
         changeOrigin: true,

@@ -2,14 +2,14 @@ import request from './request'
 
 export function getCheckout(uuid) {
   return request({
-    url: '/rest/cash-in/checkout/' + uuid,
+    url: '/api/cash-in/checkout/' + uuid,
     method: 'get'
   })
 }
 
 export function selectMethod(data) {
   return request({
-    url: '/rest/cash-in/checkout/' + data.uuid  +'/selectMethod',
+    url: '/api/cash-in/checkout/' + data.uuid  +'/selectMethod',
     method: 'post',
     data
   })
@@ -17,7 +17,7 @@ export function selectMethod(data) {
 
 export function unSelectMethod(uuid) {
   return request({
-    url: '/rest/cash-in/checkout/' + uuid  +'/unSelectMethod',
+    url: '/api/cash-in/checkout/' + uuid  +'/unSelectMethod',
     method: 'post'
   })
 }

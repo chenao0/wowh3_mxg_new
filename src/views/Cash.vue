@@ -6,7 +6,7 @@
         Product Name
       </div>
       <div class="title2">
-        BUKABUKA
+        {{ merchantName }}
       </div>
     </div>
     <div class="c3">
@@ -62,7 +62,11 @@ export default {
       },
       showLoading: false,
       progressValue: 0,
+      merchantName: ''
     }
+  },
+  mounted() {
+    this.merchantName = localStorage.getItem('merchantName');
   },
   methods: {
     clickFix() {
@@ -144,7 +148,7 @@ export default {
   position: absolute;
   z-index: 2;
   top: 57%;
-  right: 40px;
+    left: 54%;
   color: #28B27C;
   line-height: 20px;
   font-weight: 900;

@@ -4,7 +4,7 @@ import { Notify } from 'vant';
 // create an axios instance
 const service = axios.create({
   // baseURL: "https://dev-payment.wowpayidr.com", // url = base url + request url
-  baseURL: "/dev-api", // url = base url + request url
+  // baseURL: "/dev-api", // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 180000 // request timeout,
 })

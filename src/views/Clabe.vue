@@ -345,7 +345,7 @@ margin: auto;
     position: absolute;
     z-index: 2;
     top: 57%;
-    left: 53%;
+    left: 54%;
     color: #28B27C;
     line-height: 20px;
     font-weight: 900;
