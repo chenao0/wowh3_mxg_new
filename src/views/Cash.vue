@@ -1,6 +1,6 @@
 <template>
   <div class="home_1">
-    <div class="bj">
+    <div class="bj" style="max-height: max-height: 200px;">
       <img class="bj_img" src="../assets/bj1.png" alt="">
       <div class="title">
         Product Name
@@ -131,15 +131,18 @@ export default {
 <style lang="less" scoped>
 .bj {
   position: relative;
+  max-height: 270px;
+  overflow: hidden;
 }
 .bj_img {
   width: 100%;
+    margin-top: -35px;
 }
 .title {
   position: absolute;
   z-index: 2;
   top: 44%;
-  right: 90px;
+  left: 50%;
   color: #28B27C;
   line-height: 20px;
   font-size: 3.7vw;
@@ -148,7 +151,7 @@ export default {
   position: absolute;
   z-index: 2;
   top: 57%;
-    left: 54%;
+  left: 50%;
   color: #28B27C;
   line-height: 20px;
   font-weight: 900;
@@ -215,10 +218,10 @@ export default {
   }
 }
 .c3 {
-  margin-top: -70px;
+  margin-top: 0px;
   .c3_div1 {
     margin: auto;
-    margin-top: 40px;
+    // margin-top: 40px;
     width: 75%;
     background: #FFFFFF;
     box-shadow: 0px 2px 16px 0px rgba(150,204,183,0.3);
@@ -227,11 +230,14 @@ export default {
     display: flex;
     align-items: center;
     .c3_div1_circle {
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       border: 2px solid #979797;
       margin-right: 15px;
+      line-height: 25px;
+      box-sizing: border-box;
+      font-size: 20px;
     }
     div {
       font-weight: 800;

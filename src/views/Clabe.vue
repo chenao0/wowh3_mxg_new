@@ -1,6 +1,6 @@
 <template>
   <div class="home_1">
-    <div class="bj">
+    <div class="bj" :style="order.data.selectedMethod === 'OFFLINE'?'max-height: 200px;':'max-height: 210px;'">
       <img class="bj_img" src="../assets/bj1.png" alt="">
       <div class="title">
         Product Name
@@ -9,25 +9,70 @@
         {{ order.data.merchantName }}
       </div>
     </div>
-    <div class="c1">
-      <img src="../assets/div1.png" alt="">
-      <span>
-        {{ order.data.va }}
-        <img :data-clipboard-text="order.data.va" class="tag-read" @click="copy" style="width:4vw;" src="../assets/copy.png" alt="">
-      </span>
-      <div>Clabe</div>
-    </div>
-    <div class="c2" @click="hintShow = true,clickHintShow()">
-      <img src="../assets/right.png" alt="">
-      How to pay ?
-    </div>
-    <div class="c3">
-      <img src="../assets/await.png" alt="">
-      <div>
-        Not received.
+    <div v-if="order.data.selectedMethod === 'OFFLINE'" class="xuanzeClass" @click="OfflineStyleShow = !OfflineStyleShow">
+      <div style="display: flex;align-items: center;">
+        <div style="width:30px;margin-left:15px;">
+          <img style="width: 100%;" :src="xuanzhongWay.logoUrl" alt="">
+        </div>
+        <div style="text-align: left;margin-left:15px;font-size: 12px;color:#343434;font-weight: 600;font-family: PingFangSC-Semibold, PingFang SC;">
+          {{ xuanzhongWay.subject }}
+        </div>
+      </div>
+      <div style="width:20px;height:20px;margin-left:15px;">
+        <img style="width: 100%;" src="../assets/jiantou.png" alt="">
       </div>
     </div>
-    <div class="c4" style="margin-top: 55px;">
+    <div class="OfflineStyle" v-if="!OfflineStyleShow">
+      <div class="div2">
+        <div class="div1" v-for="(item, index) in order.data.methodGuideVos" :key="index" @click="ClickWay(item)">
+          <div style="border: 1px solid #666666;border-radius: 50%;width: 12px;height: 12px;"></div>
+          <div style="width:28px;height:28px;margin-left:15px;">
+            <img style="width: 100%;" :src="item.logoUrl" alt="">
+          </div>
+          <div style="text-align: left;margin-left:15px;font-size: 12px;color:#343434;font-weight: 600;font-family: PingFangSC-Semibold, PingFang SC;">
+            {{ item.subject }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="OfflineStyleShow">
+      <div class="c1" style="margin-top:35px;">
+        <img src="../assets/div1.png" alt="">
+        <span>
+          {{ order.data.va }}
+          <img :data-clipboard-text="order.data.va" class="tag-read" @click="copy" style="width:4vw;" src="../assets/copy.png" alt="">
+        </span>
+        <div>Clabe</div>
+      </div>
+      <div v-if="xuanzhongWay.content" class="c1" style="margin-top:20px;">
+        <img src="../assets/div1.png" alt="">
+        <span>
+          {{ xuanzhongWay.content }}
+        </span>
+        <div>Partnership No.</div>
+      </div>
+      <div v-if="order.data.selectedMethod === 'OFFLINE'" @click="tiaozhuan" style="font-size: 20px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: #006847;">
+        Puntos de pago >
+      </div>
+
+      <div v-if="order.data.selectedMethod !== 'OFFLINE'" class="c2" @click="hintShow = true">
+        <img src="../assets/right.png" alt="">
+        How to pay ?
+      </div>
+      <div class="c3" style="margin-top:3%;" v-if="order.data.selectedMethod === 'OFFLINE'">
+        <img style="width:20%;" src="../assets/await.png" alt="">
+        <div>
+          Not received.
+        </div>
+      </div>
+      <div class="c3" v-else>
+        <img src="../assets/await.png" alt="">
+        <div>
+          Not received.
+        </div>
+      </div>
+    </div>
+    <div class="c4" :style="order.data.selectedMethod === 'OFFLINE'?'margin-top: 5px;':'margin-top: 25px;'">
       <button style="width:60%;" @click="Refresh">
         <img src="../assets/button.png" alt="">
         <span class="span2">Refresh</span>
@@ -78,12 +123,24 @@
             </div>
           </div>
         </div>
-        <div class="hint" v-else>
-          <img style="width: 80%;padding-bottom: 20px;" src="../assets/hint.png" alt="">
-            <div v-for="(item, index) in boldInstructions" :key="index" style="word-break: break-all;text-align: left;white-space: pre-wrap;line-height: 36px;">
-              <span style="color: #28B27C;font-weight: 500;font-size: 4.2vw;">{{ index+1 }}. </span>
-              <span style="font-size:3.7vw;" v-html="item"></span>
-            </div>
+        <div class="hint" style="height:100%;" v-else>
+          <div>
+            <img style="width: 80%;padding-bottom: 20px;" src="../assets/hint.png" alt="">
+          </div>
+          <div style="height: 81%;
+overflow-y: auto;word-break: break-all;text-align: left;white-space: pre-wrap;line-height: 36px;">
+            <span style="color: #28B27C;font-weight: 500;font-size: 4.2vw;">1. </span><span style="font-size:3.7vw;">Abre tu banca movil.</span> <br>
+            <span style="color: #28B27C;font-weight: 500;font-size: 4.2vw;">2. </span><span style="font-size:3.7vw;">Selecciona "transferencia rapida".</span> <br>
+            <span style="color: #28B27C;font-weight: 500;font-size: 4.2vw;">3. </span><span style="font-size:3.7vw;">Selecciona "transferencia rapida" Ingresa la CLABE numerica de 18digitos <span style="font-weight:bold;">({{ order.data.va }})</span>.</span>
+            <img :data-clipboard-text="order.data.va" class="tag-read" @click="copy" style="margin-bottom: -6px;margin-left:6px;width:4vw;" src="../assets/copy2.png" alt=""> <br>
+            <span style="color: #28B27C;font-weight: 500;font-size: 4.2vw;">4. </span><span style="font-size:3.7vw;">En nombre de benefciario, ingresa "Jordan Harden".</span> <br>
+            <span style="color: #28B27C;font-weight: 500;font-size: 4.2vw;">5. </span><span style="font-size:3.7vw;">En concepto, ingresa "pago".</span> <br>
+            <span style="color: #28B27C;font-weight: 500;font-size: 4.2vw;">6. </span><span style="font-size:3.7vw;">Ingrese el monto apropiado en "Importe".</span> <br>
+            <span style="color: #28B27C;font-weight: 500;font-size: 4.2vw;">7. </span><span style="font-size:3.7vw;">Pulsa "continuar".</span> <br>
+            <span style="color: #28B27C;font-weight: 500;font-size: 4.2vw;">8. </span><span style="font-size:3.7vw;">Confrma que los datos estan correctosde ser asi, selecciona "Transferir".</span> <br>
+            <span style="color: #28B27C;font-weight: 500;font-size: 4.2vw;">9. </span><span style="font-size:3.7vw;">Ingresa su token o su contrasena paracompletar el proceso.</span> <br>
+            <span style="color: #28B27C;font-weight: 500;font-size: 4.2vw;">10. </span><span style="font-size:3.7vw;">Se completa la transferencia</span> <br>
+          </div>
         </div>
       </van-popup>
     </div>
@@ -115,6 +172,7 @@ export default {
   data() {
     return {
       hintShow: false,
+      OfflineStyleShow: true,
       selectedValue: {},
       text: 'Selecciona "transferencia rapida" Ingresa la CLABE numerica de 18digitos(640180503400000212).',
       order: {
@@ -151,37 +209,12 @@ export default {
       window.open(data, '_blank');
     },
     xuanze2() {
-      console.log('执行');
       this.xuanzhongShow = false
     },
     ClickWay(e) {
       this.xuanzhongWay = e
       this.xuanzhongShow = true
-    },
-    clickHintShow() {
-      if (this.order.data.methodGuideVos) {
-        const steps = this.order.data.methodGuideVos[0].content.split('\n').map((line) => {
-            const [title, content] = line.split('. ');
-            const id = Number(title.match(/\d+/)[0]);
-            const formattedTitle = `${id}.`;
-            return { title: formattedTitle, text: content };
-          });
-          this.textData = steps
-          this.boldInstructions = steps.map((instruction) => {
-            const regex = /\((.*?)\)/g;
-            const matchedText = instruction.text.match(regex);
-            if (matchedText && matchedText.length > 0) {
-              const firstMatch = matchedText[0];
-              const boldText = `<strong> ${firstMatch}</strong>`;
-              const modifiedText = instruction.text.replace(firstMatch, boldText);
-              return modifiedText;
-            }
-
-            return instruction.text;
-          });
-      } else {
-        this.init()
-      }
+      this.OfflineStyleShow = true
     },
     copy() {
       var clipboard = new Clipboard('.tag-read')
@@ -234,26 +267,6 @@ export default {
             content: res.data.methodGuideVos[0].content,
             subject:  res.data.methodGuideVos[0].subject
           }
-        } else {
-          const steps = res.data.methodGuideVos[0].content.split('\n').map((line) => {
-            const [title, content] = line.split('. ');
-            const id = Number(title.match(/\d+/)[0]);
-            const formattedTitle = `${id}.`;
-            return { title: formattedTitle, text: content };
-          });
-          this.textData = steps
-          this.boldInstructions = steps.map((instruction) => {
-            const regex = /\((.*?)\)/g;
-            const matchedText = instruction.text.match(regex);
-            if (matchedText && matchedText.length > 0) {
-              const firstMatch = matchedText[0];
-              const boldText = `<strong> ${firstMatch}</strong>`;
-              const modifiedText = instruction.text.replace(firstMatch, boldText);
-              return modifiedText;
-            }
-
-            return instruction.text;
-          });
         }
         this.showLoading = false
         this.progressValue = 100;
@@ -274,12 +287,56 @@ export default {
   .tishi {
     .van-popup {
       padding: 0px !important;
-      overflow-y: auto !important;
+      // overflow-y: auto !important;
       font-family: PingFangSC-Medium, PingFang SC;
     }
   }
 </style>
 <style lang="less" scoped>
+.xuanzeClass {
+  // height: 84px;
+  background: #FFFFFF;
+  box-shadow: 0px 2px 16px 0px rgba(150,204,183,0.3);
+  border-radius: 12px;
+  margin: auto;
+  padding: 20px 24px;
+  width: 87%;
+  max-height: 60px;
+  box-sizing: border-box;
+  display: flex;
+  // margin-bottom: 42px;
+  // margin-top: -50px;
+  align-items: center;
+  justify-content: space-between;
+}
+.OfflineStyle {
+  background-image: url(../assets/div3.png);
+  width: 87%;
+  margin: auto;
+  height: 45vh;
+  box-sizing: border-box;
+  padding: 5px 0;
+  background-size: 100% 100%;
+  margin-top: 10px;
+  .div2 {
+    height: 100%;
+    overflow-y: auto;
+    .div1 {
+      background: #FFFFFF;
+      box-shadow: 0px 2px 16px 0px rgba(150,204,183,0.3);
+      border-radius: 8px;
+      border: 1px solid #D6D6D6;
+      width: 90%;
+      padding: 10px;
+      box-sizing: border-box;
+      margin: auto;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+    }
+  }
+  
+}
 .content13 {
   display: flex;
 align-items: center;
@@ -329,39 +386,43 @@ margin: auto;
 }
 .bj {
   position: relative;
+  max-height: 270px;
+  overflow: hidden;
   .bj_img {
     width: 100%;
+    margin-top: -75px;
   }
-  .title {
-    position: absolute;
-    z-index: 2;
-    top: 44%;
-    right: 90px;
-    color: #28B27C;
-    line-height: 20px;
-    font-size: 3.7vw;
-  }
-  .title2 {
-    position: absolute;
-    z-index: 2;
-    top: 57%;
-    left: 54%;
-    color: #28B27C;
-    line-height: 20px;
-    font-weight: 900;
-    font-size: 5.7vw;
-  }
+.title {
+  position: absolute;
+  z-index: 2;
+  top: 44%;
+  left: 50%;
+  color: #28B27C;
+  line-height: 20px;
+  font-size: 3.7vw;
+}
+.title2 {
+  position: absolute;
+  z-index: 2;
+  top: 57%;
+  left: 50%;
+  color: #28B27C;
+  line-height: 20px;
+  font-weight: 900;
+  font-size: 5.7vw;
+}
 }
 .c1 {
   position: relative;
   text-align: center;
   img {
     width: 95%;
+    max-height: 86px;
   }
   div {
     position: absolute;
     top: -20px;
-    left: 7.5%;
+    left: 8.5%;
     font-size: 4vw;
     font-weight: 400;
     color: #999999;
@@ -400,7 +461,7 @@ margin: auto;
   }
 }
 .c3 {
-  margin-top: 18%;
+  margin-top: 10%;
   img {
     width: 40%;
   }

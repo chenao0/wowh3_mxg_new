@@ -18,7 +18,7 @@
     </div>
     <div class="c3">
       <div v-if="SPEIBankShow" class="c2_div1" :class="selectMethodData.selectedMethod === 'SPEI'?'c2_div_border':''" @click="selectMethodData.selectedMethod = 'SPEI'">
-        <img style="width:54px;margin-top: -7px;margin-bottom: 10px;" src="../assets/clabe.png" alt=""> <br>
+        <img style="width:54px;margin-top: -7px;margin-left: -7px;" src="../assets/clabe.png" alt="">
         <span>Clabe</span>
       </div>
       <div v-if="OFFLINEShow" class="c2_div1" :class="selectMethodData.selectedMethod === 'OFFLINE'?'c2_div_border':''" @click="selectMethodData.selectedMethod = 'OFFLINE'">
@@ -216,15 +216,18 @@ export default {
 <style lang="less" scoped>
 .bj {
   position: relative;
+  max-height: 270px;
+  overflow: hidden;
 }
 .bj_img {
   width: 100%;
+    margin-top: -35px;
 }
 .title {
   position: absolute;
   z-index: 2;
   top: 44%;
-  right: 90px;
+  left: 50%;
   color: #28B27C;
   line-height: 20px;
   font-size: 3.7vw;
@@ -233,7 +236,7 @@ export default {
   position: absolute;
   z-index: 2;
   top: 57%;
-  left: 54%;
+  left: 50%;
   color: #28B27C;
   line-height: 20px;
   font-weight: 900;
@@ -315,6 +318,7 @@ export default {
     text-align: left;
     padding: 10px;
     display: flex;
+    height: 80px;
     flex-direction: column;
     img {
       width: 40px;
