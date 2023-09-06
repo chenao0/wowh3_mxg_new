@@ -2,8 +2,40 @@
   <div class="home_1">
     <div class="bj" :style="order.data.selectedMethod === 'OFFLINE'?'max-height: 200px;':'max-height: 210px;'">
       <img class="bj_img" src="../assets/bj1.png" alt="">
+      <div  @click="clickBall" style="cursor: pointer;position: absolute;transition: background-color 0.3s;
+top: 20px;
+right: 20px;">
+          <div style="width: 70px;
+height: 27px;
+background: #28B27C;
+border-radius: 37px;
+opacity: 0.55;
+display:flex;
+justify-content: center;
+line-height: 27px;
+">
+            <div style="color:#fff;width:50%;font-size: 11px;">EN</div>
+            <div style="color:#fff;width:50%;font-size: 11px;">ES</div>
+          </div>
+          <dir ref="ball" style="width: 35px;
+height: 27px;
+background: #09D082;
+border-radius: 37px;
+position: absolute;
+top:0px;
+left:0;
+transform: translateX(0em);
+line-height: 27px;
+text-align: center;
+transition: transform 0.3s cubic-bezier(0.3, 1.05, 0.4, 1.05), -webkit-transform 0.3s cubic-bezier(0.3, 1.05, 0.4, 1.05);
+">
+              <div style="font-size:11px;color:#fff;">
+                {{ title2 }}
+              </div>
+            </dir>
+        </div>
       <div class="title">
-        Product Name
+        {{ this.title.ProductName }}
       </div>
       <div class="title2">
         {{ order.data.merchantName }}
@@ -42,40 +74,41 @@
           {{ order.data.va }}
           <img :data-clipboard-text="order.data.va" class="tag-read" @click="copy" style="width:4vw;" src="../assets/copy.png" alt="">
         </span>
-        <div>Clabe</div>
+        <div v-if="order.data.selectedMethod === 'OFFLINE'">{{ this.title.Cash }}</div>
+        <div v-else>Clabe</div>
       </div>
       <div v-if="xuanzhongWay.content" class="c1" style="margin-top:20px;">
         <img src="../assets/div1.png" alt="">
         <span>
           {{ xuanzhongWay.content }}
         </span>
-        <div>Partnership No.</div>
+        <div>{{ this.title.PartnershipNo }}</div>
       </div>
       <div v-if="order.data.selectedMethod === 'OFFLINE'" @click="tiaozhuan" style="font-size: 20px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: #006847;">
-        Puntos de pago >
+        {{ this.title.PuntosPago }}
       </div>
 
       <div v-if="order.data.selectedMethod !== 'OFFLINE'" class="c2" @click="hintShow = true">
         <img src="../assets/right.png" alt="">
-        How to pay ?
+        {{ this.title.HowToPay }}
       </div>
       <div class="c3" style="margin-top:3%;" v-if="order.data.selectedMethod === 'OFFLINE'">
         <img style="width:20%;" src="../assets/await.png" alt="">
         <div>
-          Not received.
+          {{ this.title.NotReceived }}
         </div>
       </div>
       <div class="c3" v-else>
         <img src="../assets/await.png" alt="">
         <div>
-          Not received.
+          {{ this.title.NotReceived }}
         </div>
       </div>
     </div>
     <div class="c4" :style="order.data.selectedMethod === 'OFFLINE'?'margin-top: 5px;':'margin-top: 25px;'">
       <button style="width:60%;" @click="Refresh">
         <img src="../assets/button.png" alt="">
-        <span class="span2">Refresh</span>
+        <span class="span2">{{ this.title.Refresh }}</span>
       </button>
     </div>
     <div class="tishi">
@@ -184,6 +217,7 @@ export default {
       boldInstructions: [],
       xuanzhongWay: {},
       xuanzhongShow: true,
+      title2: 'EN'
     }
   },
   created() {
@@ -203,7 +237,27 @@ export default {
       }
     }
   },
+  mounted() {
+    if (this.title.Amount === 'Cantidad') {
+      this.title2 = 'ES'
+      this.$refs.ball.style.transform = 'translateX(2.1em)';
+    } else {
+      this.title2 = 'EN'
+      this.$refs.ball.style.transform = 'translateX(0em)';
+    }
+  },
   methods: {
+    clickBall() {
+      if (this.$refs.ball.style.transform === 'translateX(2.1em)') {
+        this.$refs.ball.style.transform = 'translateX(0em)';
+        this.title2 = 'EN'
+        this.executeLang('eg')
+      } else {
+        this.$refs.ball.style.transform = 'translateX(2.1em)';
+        this.title2 = 'ES'
+        this.executeLang('mxg')
+      }
+    },
     tiaozhuan() {
       var data = 'https://www.paycashglobal.com/buscador.php'
       window.open(data, '_blank');

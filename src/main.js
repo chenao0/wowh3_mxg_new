@@ -15,6 +15,16 @@ Vue.use(Button);
 Vue.use(Popup);
 Vue.use(Picker);
 Vue.use(Icon);
+import eg from './utils/lang/eg'
+import mxg from './utils/lang/mxg'
+Vue.prototype.title = eg
+Vue.prototype.executeLang = function(e) {
+  if (e === 'eg') {
+    Vue.prototype.title = eg
+  } else {
+    Vue.prototype.title = mxg
+  }
+}
 
 Vue.config.productionTip = false
 

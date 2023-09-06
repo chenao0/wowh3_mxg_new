@@ -2,8 +2,40 @@
   <div class="home_1">
     <div class="bj">
       <img class="bj_img" src="../assets/bj1.png" alt="">
+        <div  @click="clickBall" style="cursor: pointer;position: absolute;transition: background-color 0.3s;
+top: 20px;
+right: 20px;">
+          <div style="width: 70px;
+height: 27px;
+background: #28B27C;
+border-radius: 37px;
+opacity: 0.55;
+display:flex;
+justify-content: center;
+line-height: 27px;
+">
+            <div style="color:#fff;width:50%;font-size: 11px;">EN</div>
+            <div style="color:#fff;width:50%;font-size: 11px;">ES</div>
+          </div>
+          <dir ref="ball" style="width: 35px;
+height: 27px;
+background: #09D082;
+border-radius: 37px;
+position: absolute;
+top:0px;
+left:0;
+transform: translateX(0em);
+line-height: 27px;
+text-align: center;
+transition: transform 0.3s cubic-bezier(0.3, 1.05, 0.4, 1.05), -webkit-transform 0.3s cubic-bezier(0.3, 1.05, 0.4, 1.05);
+">
+              <div style="font-size:11px;color:#fff;">
+                {{ title2 }}
+              </div>
+            </dir>
+        </div>
       <div class="title">
-        Product Name
+        {{ this.title.ProductName }}
       </div>
       <div class="title2">
         {{ initData.merchantName }}
@@ -14,7 +46,7 @@
       <span>
         {{ initData.amount |currency }}
       </span>
-      <div>Amount</div>
+      <div>{{ this.title.Amount}}</div>
     </div>
     <div class="c3">
       <div v-if="SPEIBankShow" class="c2_div1" :class="selectMethodData.selectedMethod === 'SPEI'?'c2_div_border':''" @click="selectMethodData.selectedMethod = 'SPEI'">
@@ -23,17 +55,17 @@
       </div>
       <div v-if="OFFLINEShow" class="c2_div1" :class="selectMethodData.selectedMethod === 'OFFLINE'?'c2_div_border':''" @click="selectMethodData.selectedMethod = 'OFFLINE'">
         <img style="width:32px;" src="../assets/cash.png" alt=""> <br>
-        <span>Cash</span>
+        <span>{{ this.title.Cash }}</span>
       </div>
     </div>
     <div class="c2" style="margin-top: 30%;">
-      <button v-if="selectMethodData.selectedMethod === 'SPEI'" style="width:60%;" @click="clickFix">
+      <button v-if="selectMethodData.selectedMethod === 'SPEI'" style="width:72%;" @click="clickFix">
         <img src="../assets/button.png" alt="">
-        <span class="span2">Get Clabe</span>
+        <span class="span2">{{ this.title.GetClabe }}</span>
       </button>
-      <button v-else style="width:60%;" @click="clickFix2">
+      <button v-else style="width:72%;" @click="clickFix2">
         <img src="../assets/button.png" alt="">
-        <span class="span2">Next</span>
+        <span class="span2">{{ this.title.Next }}</span>
       </button>
     </div>
     <van-popup 
@@ -70,12 +102,24 @@ export default {
       progressValue: 0,
       SPEIBankShow: false,
       OFFLINEShow: false,
+      title2: 'EN'
     }
   },
   mounted() {
     this.init()
   },
   methods: {
+    clickBall() {
+      if (this.$refs.ball.style.transform === 'translateX(2.1em)') {
+        this.$refs.ball.style.transform = 'translateX(0em)';
+        this.title2 = 'EN'
+        this.executeLang('eg')
+      } else {
+        this.$refs.ball.style.transform = 'translateX(2.1em)';
+        this.title2 = 'ES'
+        this.executeLang('mxg')
+      }
+    },
     init() {
       this.showLoading = true;
       let second = 0;
